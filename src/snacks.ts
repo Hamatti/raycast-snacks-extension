@@ -1,4 +1,4 @@
-import { showHUD, getPreferenceValues } from "@raycast/api";
+import { showHUD, getPreferenceValues, getApplications, open } from "@raycast/api";
 import fse from "fs-extra";
 import slugify from "slugify";
 
@@ -31,6 +31,10 @@ tags: snacks
     fse.writeFileSync("/tmp/" + filename, template);
     fse.copyFileSync("/tmp/" + filename, path + filename);
     await showHUD(`Created file  ${path + filename}`);
+
+    const applications = await getApplications();
+    const visualStudioCode = applications.find((app) => app.bundleId === "com.microsoft.VSCode");
+    await open(path + filename, visualStudioCode);
   } else {
     showHUD(`Path does not exist ${path}`);
   }
