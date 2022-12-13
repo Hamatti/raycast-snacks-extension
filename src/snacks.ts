@@ -1,4 +1,4 @@
-import { showHUD, getPreferenceValues, getApplications, open } from "@raycast/api";
+import { showHUD, getPreferenceValues, getApplications, open, showToast, Toast } from "@raycast/api";
 import fse from "fs-extra";
 import slugify from "slugify";
 
@@ -34,6 +34,19 @@ tags: snacks
 
     const applications = await getApplications();
     const visualStudioCode = applications.find((app) => app.bundleId === "com.microsoft.VSCode");
+
+    if (!visualStudioCode) {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: "Visual Studio Code is not installed",
+        primaryAction: {
+          title: "Install Visual Studio Code",
+          onAction: () => open("https://code.visualstudio.com/download"),
+        },
+      });
+      return;
+    }
+
     await open(path + filename, visualStudioCode);
   } else {
     showHUD(`Path does not exist ${path}`);
